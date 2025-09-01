@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>For {{herName}} — A Tiny Game</title>
+  <link rel="stylesheet" href="style.css" />
+  <meta name="description" content="Collect the hearts and find the secret message." />
+</head>
+<body>
+  <div id="screen">
+    <header class="hud">
+      <div>❤️ <span id="score">0</span></div>
+      <div>⏱️ <span id="time">30</span>s</div>
+      <div class="names"><span id="you">Taha</span> ➜ <span id="her">Soumaya</span></div>
+    </header>
+
+    <canvas id="game" width="900" height="600" aria-label="Love game"></canvas>
+
+    <div id="touch">
+      <button data-dx="-1" data-dy="0">◀</button>
+      <div class="v">
+        <button data-dx="0" data-dy="-1">▲</button>
+        <button data-dx="0" data-dy="1">▼</button>
+      </div>
+      <button data-dx="1" data-dy="0">▶</button>
+    </div>
+
+    <div id="modal" class="hidden">
+      <div class="card">
+        <h1 id="finalTitle">To You, <span id="her2">Soumaya</span> 💌</h1>
+        <p id="finalMsg">
+          You collected <b id="finalScore">0</b> hearts.  
+          I love you more than all of them — today and every day.
+        </p>
+        <a id="secretLink" class="btn" href="#" target="_blank" rel="noopener">Open your surprise</a>
+        <button class="btn ghost" id="replay">Play again</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="game.js"></script>
+</body>
+</html>
