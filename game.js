@@ -17,10 +17,8 @@ const W = canvas.width, H = canvas.height;
 const params = new URLSearchParams(location.search);
 const YOU  = params.get('you')  || 'Taha';
 const HER  = params.get('her')  || 'Soumaya';
-const LINK = params.get('link') || 'https://example.com/your-secret';
-youEl.textContent = YOU; herEl.textContent = HER; her2El.textContent = HER; secretLink.href = LINK;
+youEl.textContent = YOU; herEl.textContent = HER; her2El.textContent = HER;
 
-/* Game state */
 const GAME_DURATION = 30;     // seconds
 let player, hearts, score, t, keys, spawnTimer;
 let over = false;
@@ -56,7 +54,6 @@ function makeHeart(){
 
 /* ---------- Game Control ---------- */
 function startLoop(){
-  // ensure only one RAF is active
   if(frameId !== null) cancelAnimationFrame(frameId);
   lastTs = performance.now();
   frameId = requestAnimationFrame(loop);
@@ -67,7 +64,6 @@ function stopLoop(){
 }
 
 function reset(){
-  // hide modal if visible
   modal.classList.remove('show');
 
   player = { x: W/2, y: H/2, r: 14, speed: 4 };
@@ -81,38 +77,45 @@ function reset(){
   scoreEl.textContent = score;
   timeEl.textContent = t.toFixed(0);
 
-  startLoop();   // start playing immediately
+  startLoop();
 }
 
 function end(){
   over = true;
   stopLoop();
   finalScoreEl.textContent = score;
-  modal.classList.add('show'); // reveal results
+
+  // pick surprise link based on score
+  let link;
+  if(score <= 5)      link = "https://www.youtube.com/watch?v=4fndeDfaWCg"; // Backstreet Boys - I Want It That Way (funny/cute start)
+  else if(score <=10) link = "https://www.youtube.com/watch?v=EkHTsc9PU2A"; // Jason Mraz - I'm Yours
+  else if(score <=15) link = "https://www.youtube.com/watch?v=0put0_a--Ng"; // James Arthur - Say You Won't Let Go
+  else if(score <=20) link = "https://www.youtube.com/watch?v=rtOvBOTyX00"; // Christina Perri - A Thousand Years
+  else if(score <=25) link = "https://www.youtube.com/watch?v=YykjpeuMNEk"; // Coldplay - Hymn For The Weekend (dreamy vibes)
+  else                link = "https://www.youtube.com/watch?v=kTJczUoc26U"; // Bruno Mars - Just The Way You Are (grand finale)
+
+  secretLink.href = link;
+  modal.classList.add('show');
 }
 
 /* ---------- Main Loop ---------- */
 function loop(ts){
   if(over) return;
-  const dt = Math.min(0.033, (ts - lastTs) / 1000); // cap dt ~33ms
+  const dt = Math.min(0.033, (ts - lastTs) / 1000);
   lastTs = ts;
 
-  // spawn hearts
   spawnTimer += dt;
   if(spawnTimer > 0.6){ hearts.push(makeHeart()); spawnTimer = 0; }
 
-  // timer
   t -= dt; if(t <= 0){ t = 0; timeEl.textContent = '0'; end(); return; }
   timeEl.textContent = Math.ceil(t).toString();
 
-  // movement
   const accel = player.speed * (keys['Shift']?1.5:1);
   const vx = (keys['ArrowRight']||keys['d']?1:0) - (keys['ArrowLeft']||keys['a']?1:0);
   const vy = (keys['ArrowDown'] ||keys['s']?1:0) - (keys['ArrowUp']  ||keys['w']?1:0);
   player.x = Math.min(W-player.r, Math.max(player.r, player.x + vx*accel*60*dt));
   player.y = Math.min(H-player.r, Math.max(player.r, player.y + vy*accel*60*dt));
 
-  // collect hearts
   for(let i=hearts.length-1;i>=0;i--){
     const h = hearts[i]; h.wob += dt*4;
     if(dist(player.x,player.y,h.x,h.y) < player.r + h.r){
@@ -120,10 +123,8 @@ function loop(ts){
     }
   }
 
-  // draw
   ctx.clearRect(0,0,W,H);
 
-  // subtle twinkles
   for(let i=0;i<22;i++){
     ctx.globalAlpha = 0.06;
     dot(Math.sin(ts*0.0006+i)*W*0.45 + W/2, (i*27 + ts*0.04)%H, 2.5, '#38f0a3');
@@ -132,7 +133,6 @@ function loop(ts){
 
   hearts.forEach(h => drawHeart(h.x, h.y + Math.sin(h.wob)*3, h.r));
 
-  // player
   dot(player.x, player.y, player.r, '#e8f8f0');
   ctx.strokeStyle = '#38f0a3'; ctx.lineWidth = 2;
   ctx.beginPath(); ctx.arc(player.x, player.y, player.r+4, 0, Math.PI*2); ctx.stroke();
@@ -153,7 +153,6 @@ addEventListener('keydown', e=>{
 });
 addEventListener('keyup', e=>{ keys[e.key] = false; });
 
-/* Touch arrows */
 $('#touch').addEventListener('touchstart', e=>{
   const b = e.target.closest('button'); if(!b) return;
   const dx = Number(b.dataset.dx), dy = Number(b.dataset.dy);
@@ -163,14 +162,10 @@ $('#touch').addEventListener('touchstart', e=>{
   }, 16);
   b.dataset.pid = id;
 }, {passive:true});
-
 $('#touch').addEventListener('touchend', e=>{
   const b = e.target.closest('button'); if(!b) return;
   clearInterval(Number(b.dataset.pid));
 });
 
-/* Replay */
 replayBtn.addEventListener('click', reset);
-
-/* Start immediately in PLAY mode */
 document.addEventListener('DOMContentLoaded', reset);
