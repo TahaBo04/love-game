@@ -1,4 +1,4 @@
-/* ===== Mini Love Game — starts in PLAY, modal only at the end ===== */
+/* ===== Mini Love Game — robust modal toggle + score-based links ===== */
 const $ = (s) => document.querySelector(s);
 
 const canvas = $('#game');
@@ -19,15 +19,25 @@ const YOU  = params.get('you')  || 'Taha';
 const HER  = params.get('her')  || 'Soumaya';
 youEl.textContent = YOU; herEl.textContent = HER; her2El.textContent = HER;
 
-const GAME_DURATION = 30;     // seconds
+/* Game state */
+const GAME_DURATION = 30; // seconds
 let player, hearts, score, t, keys, spawnTimer;
 let over = false;
 let frameId = null;
 let lastTs = 0;
 
-/* ---------- Helpers ---------- */
+/* ---------- Utils ---------- */
 function rnd(a,b){ return a + Math.random()*(b-a); }
 function dist(ax,ay,bx,by){ return Math.hypot(ax-bx, ay-by); }
+
+function showModal(){
+  modal.classList.remove('hidden');   // keep CSS happy if you rely on it
+  modal.style.display = 'flex';       // force visible regardless of CSS specificity
+}
+function hideModal(){
+  modal.classList.add('hidden');
+  modal.style.display = 'none';
+}
 
 function drawHeart(x,y,r){
   ctx.save(); ctx.translate(x,y); ctx.scale(r/20, r/20);
@@ -48,24 +58,20 @@ function dot(x,y,r,color){
   ctx.fillStyle=color; ctx.shadowColor=color; ctx.shadowBlur=10; ctx.fill();
 }
 
-function makeHeart(){
-  return { x:rnd(30, W-30), y:rnd(30, H-30), r:rnd(12,20), wob:rnd(0,6.28) };
-}
+function makeHeart(){ return { x:rnd(30,W-30), y:rnd(30,H-30), r:rnd(12,20), wob:rnd(0,6.28) }; }
 
-/* ---------- Game Control ---------- */
+/* ---------- Control ---------- */
 function startLoop(){
   if(frameId !== null) cancelAnimationFrame(frameId);
   lastTs = performance.now();
   frameId = requestAnimationFrame(loop);
 }
-
 function stopLoop(){
   if(frameId !== null){ cancelAnimationFrame(frameId); frameId = null; }
 }
 
 function reset(){
-  modal.classList.remove('show');
-
+  hideModal();                         // ensure results are hidden on start
   player = { x: W/2, y: H/2, r: 14, speed: 4 };
   hearts = [];
   score = 0;
@@ -80,25 +86,24 @@ function reset(){
   startLoop();
 }
 
+function pickVideoByScore(s){
+  if(s <= 5)  return "https://www.youtube.com/watch?v=4fndeDfaWCg"; // Backstreet Boys – I Want It That Way
+  if(s <=10)  return "https://www.youtube.com/watch?v=EkHTsc9PU2A"; // Jason Mraz – I'm Yours
+  if(s <=15)  return "https://www.youtube.com/watch?v=0put0_a--Ng"; // James Arthur – Say You Won't Let Go
+  if(s <=20)  return "https://www.youtube.com/watch?v=rtOvBOTyX00"; // Christina Perri – A Thousand Years
+  if(s <=25)  return "https://www.youtube.com/watch?v=YykjpeuMNEk"; // Coldplay – Hymn For The Weekend
+  return        "https://www.youtube.com/watch?v=kTJczUoc26U";       // Bruno Mars – Just The Way You Are
+}
+
 function end(){
   over = true;
   stopLoop();
   finalScoreEl.textContent = score;
-
-  // pick surprise link based on score
-  let link;
-  if(score <= 5)      link = "https://www.youtube.com/watch?v=4fndeDfaWCg"; // Backstreet Boys - I Want It That Way (funny/cute start)
-  else if(score <=10) link = "https://www.youtube.com/watch?v=EkHTsc9PU2A"; // Jason Mraz - I'm Yours
-  else if(score <=15) link = "https://www.youtube.com/watch?v=0put0_a--Ng"; // James Arthur - Say You Won't Let Go
-  else if(score <=20) link = "https://www.youtube.com/watch?v=rtOvBOTyX00"; // Christina Perri - A Thousand Years
-  else if(score <=25) link = "https://www.youtube.com/watch?v=YykjpeuMNEk"; // Coldplay - Hymn For The Weekend (dreamy vibes)
-  else                link = "https://www.youtube.com/watch?v=kTJczUoc26U"; // Bruno Mars - Just The Way You Are (grand finale)
-
-  secretLink.href = link;
-  modal.classList.add('show');
+  secretLink.href = pickVideoByScore(score); // set the real destination here
+  showModal();
 }
 
-/* ---------- Main Loop ---------- */
+/* ---------- Loop ---------- */
 function loop(ts){
   if(over) return;
   const dt = Math.min(0.033, (ts - lastTs) / 1000);
@@ -107,7 +112,8 @@ function loop(ts){
   spawnTimer += dt;
   if(spawnTimer > 0.6){ hearts.push(makeHeart()); spawnTimer = 0; }
 
-  t -= dt; if(t <= 0){ t = 0; timeEl.textContent = '0'; end(); return; }
+  t -= dt;
+  if(t <= 0){ timeEl.textContent = '0'; end(); return; }
   timeEl.textContent = Math.ceil(t).toString();
 
   const accel = player.speed * (keys['Shift']?1.5:1);
@@ -168,4 +174,10 @@ $('#touch').addEventListener('touchend', e=>{
 });
 
 replayBtn.addEventListener('click', reset);
-document.addEventListener('DOMContentLoaded', reset);
+
+/* Start immediately in PLAY mode */
+document.addEventListener('DOMContentLoaded', ()=>{
+  // In case your CSS initially sets display:flex, force-hide at boot:
+  hideModal();
+  reset();
+});
