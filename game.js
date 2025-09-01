@@ -29,6 +29,7 @@ function reset(){
   t = 30; spawnTimer = 0;
   scoreEl.textContent = score; timeEl.textContent = t;
   modal.classList.add('hidden');
+  modal.style.display = 'none';
   loop(0);
 }
 
@@ -114,6 +115,7 @@ function end(){
   over = true;
   finalScoreEl.textContent = score;
   modal.classList.remove('hidden');
+  modal.style.display = 'flex';
 }
 
 function pop(x,y){
