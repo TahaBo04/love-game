@@ -15,8 +15,10 @@
       <div class="names"><span id="you">Taha</span> ➜ <span id="her">Soumaya</span></div>
     </header>
 
+    <!-- Game canvas (keep width/height to match JS canvas size) -->
     <canvas id="game" width="900" height="600" aria-label="Love game"></canvas>
 
+    <!-- Touch controls (mobile) -->
     <div id="touch">
       <button data-dx="-1" data-dy="0">◀</button>
       <div class="v">
@@ -26,6 +28,7 @@
       <button data-dx="1" data-dy="0">▶</button>
     </div>
 
+    <!-- Results modal (hidden by default; JS force-toggles display) -->
     <div id="modal" class="hidden">
       <div class="card">
         <h1 id="finalTitle">To You, <span id="her2">Soumaya</span> 💌</h1>
@@ -39,7 +42,13 @@
     </div>
   </div>
 
-  <!-- Cache-bust tip while testing -->
-  <script src="game.js?v=3"></script>
+  <noscript>
+    <p style="max-width:960px;margin:16px auto;background:#fee;padding:12px;border:1px solid #faa;border-radius:8px;">
+      This game needs JavaScript to run. Please enable JavaScript and reload.
+    </p>
+  </noscript>
+
+  <!-- Load the brand-new JS with a cache-buster -->
+  <script src="game.js?v=5"></script>
 </body>
 </html>
