@@ -87,12 +87,12 @@ function reset(){
 }
 
 function pickVideoByScore(s){
-  if(s <= 5)  return "https://www.youtube.com/watch?v=4fndeDfaWCg"; // Backstreet Boys – I Want It That Way
-  if(s <=10)  return "https://www.youtube.com/watch?v=EkHTsc9PU2A"; // Jason Mraz – I'm Yours
-  if(s <=15)  return "https://www.youtube.com/watch?v=0put0_a--Ng"; // James Arthur – Say You Won't Let Go
-  if(s <=20)  return "https://www.youtube.com/watch?v=rtOvBOTyX00"; // Christina Perri – A Thousand Years
-  if(s <=25)  return "https://www.youtube.com/watch?v=YykjpeuMNEk"; // Coldplay – Hymn For The Weekend
-  return        "https://www.youtube.com/watch?v=kTJczUoc26U";       // Bruno Mars – Just The Way You Are
+  if(s <= 5)  return "https://youtu.be/NwFVSclD_uc?si=o8ZmVh2jrPV8xr3L"; // Backstreet Boys – I Want It That Way
+  if(s <=10)  return "https://youtu.be/hN5X4kGhAtU?si=fsRMmdkYexJ90ko4"; // Jason Mraz – I'm Yours
+  if(s <=15)  return "https://youtu.be/8xg3vE8Ie_E?si=_4RE2GZBTHxomEJ3"; // James Arthur – Say You Won't Let Go
+  if(s <=20)  return "https://youtu.be/Kpc31pvHjMM?si=UHDrIqAdRe1TDTC6"; // Christina Perri – A Thousand Years
+  if(s <=25)  return "https://youtu.be/sElE_BfQ67s?si=x3hRLsApGddZMx3b"; // Coldplay – Hymn For The Weekend
+  return        "https://youtu.be/CwGbMYLjIpQ?si=-3dZVjaU-Ljhti9x";       // Bruno Mars – Just The Way You Are
 }
 
 function end(){
