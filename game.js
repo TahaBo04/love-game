@@ -86,13 +86,18 @@ function reset(){
   startLoop();
 }
 
-function pickVideoByScore(s){
-  if(s <= 5)  return "https://youtu.be/NwFVSclD_uc?si=o8ZmVh2jrPV8xr3L"; // Backstreet Boys – I Want It That Way
-  if(s <=10)  return "https://youtu.be/hN5X4kGhAtU?si=fsRMmdkYexJ90ko4"; // Jason Mraz – I'm Yours
-  if(s <=15)  return "https://youtu.be/8xg3vE8Ie_E?si=_4RE2GZBTHxomEJ3"; // James Arthur – Say You Won't Let Go
-  if(s <=20)  return "https://youtu.be/Kpc31pvHjMM?si=UHDrIqAdRe1TDTC6"; // Christina Perri – A Thousand Years
-  if(s <=25)  return "https://youtu.be/sElE_BfQ67s?si=x3hRLsApGddZMx3b"; // Coldplay – Hymn For The Weekend
-  return        "https://youtu.be/CwGbMYLjIpQ?si=-3dZVjaU-Ljhti9x";       // Bruno Mars – Just The Way You Are
+function pickVideoByScore(s) {
+  if (s <= 5)
+    return "https://www.youtube.com/watch?v=NwFVSclD_uc";        // The Walters – I Love You So
+  if (s <= 10)
+    return "https://www.youtube.com/watch?v=8xg3vE8Ie_E";        // Taylor Swift – Love Story
+  if (s <= 15)
+    return "https://www.youtube.com/watch?v=xUT3ZcbVWmQ";        // James Arthur – Car’s Outside (Lyric Video)
+  if (s <= 20)
+    return "https://www.youtube.com/watch?v=Kpc31pvHjMM";        // Angham – Yaretak Fahemni
+  if (s <= 25)
+    return "https://www.youtube.com/watch?v=sElE_BfQ67s";        // Cigarettes After Sex – Apocalypse
+  return "https://www.youtube.com/watch?v=vx4kLgnFexo";          // Mitski – My Love Mine All Mine
 }
 
 function end(){
